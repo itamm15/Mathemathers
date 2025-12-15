@@ -40,8 +40,8 @@ function Register() {
   };
 
   return (
-    <div>
-      <Card>
+    <div className="flex justify-center items-center min-h-screen">
+      <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
           <div className="flex items-center justify-center gap-2">
             <UserPlus className="size-6 text-primary" />
