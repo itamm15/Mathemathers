@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/layout';
 import Home from './pages/Home';
+import Login from './pages/Login';
 import Register from './pages/Register';
 
 type Route = {
@@ -20,6 +21,7 @@ function App() {
           <Route key={index} path={route.path} element={route.element} />
         ))}      
       </Route>
+      <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
     </Routes>
   );
