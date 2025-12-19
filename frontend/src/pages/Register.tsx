@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { UserPlus } from 'lucide-react';
+import { createUser } from '@/lib/api';
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -26,10 +27,12 @@ function Register() {
     role: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: Implement registration logic
     console.log('Register:', formData);
+    let res = await createUser(formData);
+    console.log('res:', res);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
