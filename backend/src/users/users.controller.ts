@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -7,8 +7,12 @@ export class UsersController {
 
   @Post()
   async create(@Body() createUserDto: { email: string; password: string; role: string }) {
-    console.log('createUserDto:', createUserDto);
-    return this.usersService.create(createUserDto);
+    try {
+      return await this.usersService.create(createUserDto);
+    } catch (error: any) {
+      // TODO: Handle specific errors - maybe external lib?
+      throw new BadRequestException(error.message);
+    }
   }
 }
 

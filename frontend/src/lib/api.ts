@@ -10,10 +10,6 @@ export async function createUser(data: CreateUserDto) {
     body: JSON.stringify(data),
   });
 
-  if (!response.ok) {
-    throw new Error('Failed to create user');
-  }
-
   return response.json();
 }
 

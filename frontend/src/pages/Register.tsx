@@ -31,8 +31,7 @@ function Register() {
     e.preventDefault();
     // TODO: Implement registration logic
     console.log('Register:', formData);
-    let res = await createUser(formData);
-    console.log('res:', res);
+    await createUser(formData);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
