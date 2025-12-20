@@ -1,5 +1,13 @@
+import { useAuth } from "@/context/AuthContext";
+
 function Home() {
-  return <div>Hoe</div>;
+  const { user } = useAuth();
+
+  return (
+    <div>
+      {user ? "Welcome, " + user.email : "You are not logged in"}
+    </div>
+  )
 }
 
 export default Home;

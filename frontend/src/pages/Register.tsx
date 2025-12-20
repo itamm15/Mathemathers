@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -19,8 +19,12 @@ import {
 } from '@/components/ui/select';
 import { UserPlus } from 'lucide-react';
 import { createUser } from '@/lib/api';
+import { useAuth } from '@/context/AuthContext';
 
 function Register() {
+  const { setUser} = useAuth();
+  const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -31,7 +35,14 @@ function Register() {
     e.preventDefault();
     // TODO: Implement registration logic
     console.log('Register:', formData);
-    await createUser(formData);
+    const result = await createUser(formData);
+
+    if (result.error) {
+      // TODO: add error handling + toast notification
+    } else {
+      setUser(result);
+      navigate('/');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
