@@ -11,17 +11,32 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { LogIn } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement login logic
-    console.log('Login:', formData);
+    // TODO: Move to api/hooks or something like that
+    const response = await fetch('http://localhost:3000/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
+    
+    const data = await response.json();
+    if (response.ok) {
+      const { access_token } = data;
+      localStorage.setItem('token', access_token);
+      navigate('/');
+    } else {
+      console.error('Login failed:', data);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
