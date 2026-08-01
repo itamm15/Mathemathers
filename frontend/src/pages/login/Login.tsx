@@ -12,9 +12,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { LogIn } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 
 function Login() {
   const navigate = useNavigate();
+  const { setToken } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -32,7 +34,7 @@ function Login() {
     const data = await response.json();
     if (response.ok) {
       const { access_token } = data;
-      localStorage.setItem('token', access_token);
+      setToken(access_token);
       navigate('/');
     } else {
       console.error('Login failed:', data);
