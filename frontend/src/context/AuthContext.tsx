@@ -1,6 +1,9 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { User } from '@/types/user';
 
+// TODO: settle this to the env variable
+const API_BASE_URL = 'http://localhost:3000';
+
 interface AuthContextType {
   user: User | null;
   setUser: (user: User | null) => void;
@@ -12,26 +15,54 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUserState] = useState<User | null>(null);
-  const [token, setTokenState] = useState<string | null>(null);
+  const [token, setTokenState] = useState<string | null>(() => localStorage.getItem('token'));
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    
-    if (storedUser) {
+    if (!token) {
+      setUserState(null);
+      localStorage.removeItem('user');
+      return;
+    }
+
+    let cancelled = false;
+
+    const fetchProfile = async () => {
       try {
-        setUserState(JSON.parse(storedUser));
-      } catch (error) {
-        console.error('Failed to parse stored user:', error);
+        const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) {
+          throw new Error('Unauthorized');
+        }
+
+        const data = await response.json();
+        if (cancelled) return;
+
+        const profileUser: User = {
+          id: data.userId,
+          email: data.email,
+          firstName: '',
+          lastName: '',
+        };
+
+        setUserState(profileUser);
+        localStorage.setItem('user', JSON.stringify(profileUser));
+      } catch {
+        if (cancelled) return;
+        setTokenState(null);
+        setUserState(null);
+        localStorage.removeItem('token');
         localStorage.removeItem('user');
       }
-    }
+    };
 
-    const storedToken = localStorage.getItem('token');
+    fetchProfile();
 
-    if (storedToken) {
-      setTokenState(storedToken);
-    }
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [token]);
 
   const setUser = (user: User | null) => {
     setUserState(user);
