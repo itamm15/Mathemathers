@@ -18,11 +18,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { UserPlus } from 'lucide-react';
-import { createUser } from '@/lib/api';
+import { register } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 
 function Register() {
-  const { setUser} = useAuth();
+  const { setToken } = useAuth();
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
@@ -33,17 +33,14 @@ function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement registration logic
-    console.log('Register:', formData);
-    const result = await createUser(formData);
-
-    if (result.error) {
-      // TODO: add error handling + toast notification
-    } else {
-      setUser(result);
-      navigate('/');
+    const result = await register(formData);
+    if (!result.access_token) {
+      console.error('Registration failed:', result);
+      return;
     }
-  };
+    setToken(result.access_token);
+    navigate('/');
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({

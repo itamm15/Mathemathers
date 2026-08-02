@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 
@@ -18,8 +18,25 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { email: user.email, sub: user.id };
+    return this.generateToken(user);
+  }
 
+  async register(data: { email: string; password: string; role: string }) {
+    const user = await this.usersService.create({
+      email: data.email,
+      password: data.password,
+      role: data.role,
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Failed to create user');
+    }
+
+    return this.generateToken(user);
+  }
+
+  private generateToken(user: any) {
+    const payload = { email: user.email, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };
