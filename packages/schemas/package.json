@@ -2,7 +2,23 @@
   "name": "@mathemathers/schemas",
   "version": "0.0.1",
   "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
   "dependencies": {
     "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
   }
 }
