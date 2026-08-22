@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { LogIn } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { getErrorMessage } from '@/lib/errors';
 import { useAuth } from '@/context/AuthContext';
 
 function Login() {
@@ -38,7 +39,7 @@ function Login() {
       setToken(data.access_token);
       navigate('/');
     } else {
-      console.error('Login failed:', data);
+      toast.error(getErrorMessage(data.errors));
     }
   };
 
