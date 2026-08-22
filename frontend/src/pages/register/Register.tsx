@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { UserPlus } from 'lucide-react';
+import { toast } from 'sonner';
 import { register } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 
@@ -38,9 +39,10 @@ function Register() {
       console.error('Registration failed:', result);
       return;
     }
+    toast.success('Account created');
     setToken(result.access_token);
     navigate('/');
-  }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
