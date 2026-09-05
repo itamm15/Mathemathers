@@ -5,14 +5,13 @@ export const USER_ROLES = ['student', 'parent', 'tutor'] as const;
 export type UserRole = (typeof USER_ROLES)[number];
 
 export const registerSchema = z.object({
-  email: z.email(),
+  email: z.email({ error: 'INVALID_EMAIL' }),
   password: z
     .string()
-    // TODO: Add gettext
-    .min(8, 'Password must be at least 8 characters')
-    .regex(/[A-Za-z]/, 'Password must contain a letter')
-    .regex(/[0-9]/, 'Password must contain a number'),
-  role: z.enum(USER_ROLES),
+    .min(8, 'PASSWORD_TOO_SHORT')
+    .regex(/[A-Za-z]/, 'PASSWORD_MISSING_LETTER')
+    .regex(/[0-9]/, 'PASSWORD_MISSING_NUMBER'),
+  role: z.enum(USER_ROLES, { error: 'INVALID_ROLE' }),
 });
 
 export type RegisterDto = z.infer<typeof registerSchema>;
