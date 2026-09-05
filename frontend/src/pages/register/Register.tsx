@@ -20,6 +20,7 @@ import {
 import { UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
 import { register } from '@/lib/api';
+import { getErrorMessage } from '@/lib/errors';
 import { useAuth } from '@/context/AuthContext';
 
 function Register() {
@@ -35,8 +36,8 @@ function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await register(formData);
-    if (!result.access_token) {
-      console.error('Registration failed:', result);
+    if (!result.ok) {
+      toast.error(getErrorMessage(result.errors));
       return;
     }
     toast.success('Account created');
