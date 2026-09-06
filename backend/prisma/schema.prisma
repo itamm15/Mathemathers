@@ -21,10 +21,35 @@ model User {
   role         Role     @default(student)
   createdAt    DateTime @default(now()) @db.Timestamptz(6)
   updatedAt    DateTime @updatedAt @db.Timestamptz(6)
+
+  supervisionsAsSupervisor StudentSupervision[] @relation("SupervisionsAsSupervisor")
+  supervisionsAsStudent    StudentSupervision[] @relation("SupervisionsAsStudent")
+}
+
+model StudentSupervision {
+  id           String                   @id @default(uuid())
+  supervisorId String
+  studentId    String
+  status       StudentSupervisionStatus @default(PENDING)
+  createdAt    DateTime                 @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime                 @updatedAt @db.Timestamptz(6)
+
+  supervisor User @relation("SupervisionsAsSupervisor", fields: [supervisorId], references: [id], onDelete: Cascade)
+  student    User @relation("SupervisionsAsStudent", fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([supervisorId, studentId])
+  @@index([studentId, status])
+  @@index([supervisorId, status])
 }
 
 enum Role {
   student
   parent
   tutor
+}
+
+enum StudentSupervisionStatus {
+  PENDING
+  ACTIVE
+  REVOKED
 }
