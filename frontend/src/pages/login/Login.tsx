@@ -12,6 +12,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { LogIn } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { getErrorMessage } from '@/lib/errors';
 import { useAuth } from '@/context/AuthContext';
 
 function Login() {
@@ -30,14 +32,14 @@ function Login() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
     });
-    
+
     const data = await response.json();
     if (response.ok) {
-      const { access_token } = data;
-      setToken(access_token);
+      toast.success('Signed in');
+      setToken(data.access_token);
       navigate('/');
     } else {
-      console.error('Login failed:', data);
+      toast.error(getErrorMessage(data.errors));
     }
   };
 

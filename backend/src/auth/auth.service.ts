@@ -1,4 +1,5 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { type RegisterDto } from '@mathemathers/schemas';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
@@ -23,17 +24,23 @@ export class AuthService {
   }
 
   async register(data: RegisterDto) {
-    const user = await this.usersService.create({
-      email: data.email,
-      password: data.password,
-      role: data.role,
-    });
+    try {
+      const user = await this.usersService.create({
+        email: data.email,
+        password: data.password,
+        role: data.role,
+      });
 
-    if (!user) {
-      throw new UnauthorizedException('Failed to create user');
+      return this.generateToken(user);
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new BadRequestException({ errors: ['EMAIL_TAKEN'] });
+      }
+      throw error;
     }
-
-    return this.generateToken(user);
   }
 
   private generateToken(user: any) {
