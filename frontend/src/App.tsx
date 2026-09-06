@@ -3,6 +3,7 @@ import Layout from './components/layout/layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import GuestRoute from './components/GuestRoute';
 import Home from './pages/home';
+import Students from './pages/students';
 import Login from './pages/login';
 import Register from './pages/register';
 
@@ -13,8 +14,8 @@ type AppRoute = {
 
 const LAYOUT_ROUTES: AppRoute[] = [
   { path: '/', element: <Home /> },
+  { path: 'students', element: <Students /> },
 ];
-
 function App() {
   return (
     <Routes>
