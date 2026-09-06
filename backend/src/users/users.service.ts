@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { User } from '@prisma/client';
+import type { RegisterDto } from '@mathemathers/schemas';
 
 @Injectable()
 export class UsersService {
@@ -10,7 +11,7 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: { email } });
   }
 
-  async create(data: { email: string; password: string; role: string }) {
+  async create(data: RegisterDto) {
     // TODO: Hash password before saving
     return this.prisma.user.create({
       data: {
@@ -18,8 +19,8 @@ export class UsersService {
         passwordHash: data.password, // Temporary - will hash later
         firstName: '', // TODO: Add to form
         lastName: '', // TODO: Add to form
+        role: data.role
       },
     });
   }
 }
-
