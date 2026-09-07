@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { UserPlus, Users } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Inbox, UserPlus, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
@@ -17,13 +17,52 @@ import { getErrorMessage } from '@/lib/errors';
 // TODO: settle this to the env variable
 const API_BASE_URL = 'http://localhost:3000';
 
+type Row = { id: string; student: { email: string } };
+
+const SECTIONS = [
+  {
+    key: 'active' as const,
+    title: 'Linked students',
+    description: 'Students who accepted your invite',
+    empty: 'No linked students yet',
+    icon: Users,
+  },
+  {
+    key: 'pending' as const,
+    title: 'Pending invites',
+    description: 'Waiting for the student to accept',
+    empty: 'No pending invites',
+    icon: Inbox,
+  }
+];
+
 function Students() {
   const { token } = useAuth();
   const [email, setEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [rows, setRows] = useState({ pending: [] as Row[], active: [] as Row[] });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!token) return;
+
+    fetch(`${API_BASE_URL}/supervisions/students`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(async (res) => {
+        const body = await res.json();
+        if (!res.ok) {
+          toast.error(getErrorMessage(body.errors));
+          return;
+        }
+        setRows(body);
+      })
+      .finally(() => setLoading(false));
+  }, [token]);
 
   const handleInvite = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!token) return;
 
     setSubmitting(true);
     try {
@@ -37,12 +76,19 @@ function Students() {
       });
 
       const data = await response.json();
-      if (response.ok) {
-        toast.success('Invite sent');
-        setEmail('');
-      } else {
-        toast.error(getErrorMessage(data.errors ?? []));
+      if (!response.ok) {
+        toast.error(getErrorMessage(data.errors || []));
+        return;
       }
+
+      const listRes = await fetch(`${API_BASE_URL}/supervisions/students`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const listBody = await listRes.json();
+      if (listRes.ok) setRows(listBody);
+
+      toast.success('Invite sent');
+      setEmail('');
     } finally {
       setSubmitting(false);
     }
@@ -92,21 +138,38 @@ function Students() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Users className="size-5 text-primary" />
-            <CardTitle>Linked students</CardTitle>
-          </div>
-          <CardDescription>Students who accepted your invite</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            No linked students yet. Invites you send will appear here after they
-            are accepted.
-          </p>
-        </CardContent>
-      </Card>
+      {SECTIONS.map(({ key, title, description, empty, icon: Icon }) => {
+        const items = rows[key];
+
+        return (
+          <Card key={key}>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Icon className="size-5 text-primary" />
+                <CardTitle>{title}</CardTitle>
+              </div>
+              <CardDescription>{description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {loading && (
+                <p className="text-sm text-muted-foreground">Loading…</p>
+              )}
+              {!loading && items.length === 0 && (
+                <p className="text-sm text-muted-foreground">{empty}</p>
+              )}
+              {!loading && items.length > 0 && (
+                <ul className="divide-y rounded-md border">
+                  {items.map((item) => (
+                    <li key={item.id} className="px-4 py-3 text-sm font-medium">
+                      {item.student.email}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 }
