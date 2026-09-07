@@ -18,6 +18,12 @@ export class SupervisionsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('tutors')
+  async listTutors(@Request() req) {
+    return this.supervisionsService.listTutors(req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post('invite')
   async invite(@Request() req, @Body(new ZodValidationPipe(inviteSupervisionSchema)) body: InviteSupervisionDto) {
     return this.supervisionsService.invite(req.user.userId, body);

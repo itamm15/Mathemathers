@@ -76,4 +76,26 @@ export class SupervisionsService {
       ),
     };
   }
+
+  async listTutors(studentId: string) {
+    const student = await this.prisma.user.findUnique({ where: { id: studentId } });
+
+    if (!student || student.role !== 'student') {
+      throw new ForbiddenException({ errors: ['FORBIDDEN'] });
+    }
+
+    const supervisions = await this.prisma.studentSupervision.findMany({
+      where: { studentId },
+      include: { supervisor: true },
+    });
+
+    return {
+      pending: supervisions.filter(
+        (s) => s.status === StudentSupervisionStatus.PENDING,
+      ),
+      active: supervisions.filter(
+        (s) => s.status === StudentSupervisionStatus.ACTIVE,
+      ),
+    };
+  }
 }
