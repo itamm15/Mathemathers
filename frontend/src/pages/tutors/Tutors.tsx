@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { GraduationCap, Inbox } from 'lucide-react';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -37,6 +38,7 @@ function Tutors() {
   const { token } = useAuth();
   const [rows, setRows] = useState({ pending: [] as Row[], active: [] as Row[] });
   const [loading, setLoading] = useState(true);
+  const [acceptingId, setAcceptingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!token) return;
@@ -54,6 +56,31 @@ function Tutors() {
       })
       .finally(() => setLoading(false));
   }, [token]);
+
+  const handleAccept = async (id: string) => {
+    if (!token) return;
+
+    setAcceptingId(id);
+    try {
+      const res = await fetch(`${API_BASE_URL}/supervisions/${id}/accept`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const body = await res.json();
+      if (!res.ok) {
+        toast.error(getErrorMessage(body.errors || []));
+        return;
+      }
+
+      setRows((prev) => ({
+        pending: prev.pending.filter((row) => row.id !== id),
+        active: [body, ...prev.active],
+      }));
+      toast.success('Invite accepted');
+    } finally {
+      setAcceptingId(null);
+    }
+  };
 
   return (
     <div className="mx-auto max-w-4xl space-y-8">
@@ -86,8 +113,22 @@ function Tutors() {
               {!loading && items.length > 0 && (
                 <ul className="divide-y rounded-md border">
                   {items.map((item) => (
-                    <li key={item.id} className="px-4 py-3 text-sm font-medium">
-                      {item.supervisor.email}
+                    <li
+                      key={item.id}
+                      className="flex items-center justify-between gap-4 px-4 py-3"
+                    >
+                      <p className="text-sm font-medium">
+                        {item.supervisor.email}
+                      </p>
+                      {key === 'pending' && (
+                        <Button
+                          size="sm"
+                          disabled={acceptingId === item.id}
+                          onClick={() => handleAccept(item.id)}
+                        >
+                          {acceptingId === item.id ? 'Accepting…' : 'Accept'}
+                        </Button>
+                      )}
                     </li>
                   ))}
                 </ul>

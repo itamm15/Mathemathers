@@ -98,4 +98,26 @@ export class SupervisionsService {
       ),
     };
   }
+
+  async accept(studentId: string, supervisionId: string) {
+    const supervision = await this.prisma.studentSupervision.findUnique({ where: { id: supervisionId } });
+
+    if (!supervision) {
+      throw new NotFoundException({ errors: ['INVITE_NOT_FOUND'] });
+    }
+
+    if (supervision.studentId !== studentId) {
+      throw new ForbiddenException({ errors: ['FORBIDDEN'] });
+    }
+
+    if (supervision.status !== StudentSupervisionStatus.PENDING) {
+      throw new BadRequestException({ errors: ['INVITE_NOT_PENDING'] });
+    }
+
+    return this.prisma.studentSupervision.update({
+      where: { id: supervisionId },
+      data: { status: StudentSupervisionStatus.ACTIVE },
+      include: { supervisor: true },
+    });
+  }
 }

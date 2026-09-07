@@ -10,6 +10,9 @@ const ERROR_MESSAGES: Record<string, string> = {
   STUDENT_NOT_FOUND: 'No student found with this email',
   INVITE_PENDING: 'An invite is already pending',
   ALREADY_LINKED: 'This student is already linked to you',
+  INVITE_NOT_FOUND: 'Invite not found',
+  INVITE_NOT_PENDING: 'This invite is no longer pending',
+  FORBIDDEN: 'You are not allowed to do this',
 };
 
 export function getErrorMessage(errors: string[]): string {

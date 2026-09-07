@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
 import {
   inviteSupervisionSchema,
   type InviteSupervisionDto,
@@ -27,5 +27,11 @@ export class SupervisionsController {
   @Post('invite')
   async invite(@Request() req, @Body(new ZodValidationPipe(inviteSupervisionSchema)) body: InviteSupervisionDto) {
     return this.supervisionsService.invite(req.user.userId, body);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/accept')
+  async accept(@Request() req, @Param('id') id: string) {
+    return this.supervisionsService.accept(req.user.userId, id);
   }
 }
