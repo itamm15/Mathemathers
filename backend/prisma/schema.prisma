@@ -52,4 +52,5 @@ enum StudentSupervisionStatus {
   PENDING
   ACTIVE
   REVOKED
+  REJECTED
 }
