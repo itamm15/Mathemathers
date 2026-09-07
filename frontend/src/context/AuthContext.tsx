@@ -44,6 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           email: data.email,
           firstName: '',
           lastName: '',
+          role: data.role
         };
 
         setUserState(profileUser);

@@ -2,6 +2,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Users,
+  GraduationCap,
   BookOpen,
   Settings,
   LogOut,
@@ -10,16 +11,24 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 
-const NAV_ITEMS = [
+const TUTOR_NAV = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/students', label: 'Students', icon: Users, end: false },
   { to: '/quizzes', label: 'Quizzes', icon: BookOpen, end: false },
   { to: '/settings', label: 'Settings', icon: Settings, end: false },
 ];
 
+const STUDENT_NAV = [
+  { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { to: '/tutors', label: 'Tutors', icon: GraduationCap, end: false },
+  { to: '/settings', label: 'Settings', icon: Settings, end: false },
+];
+
 function Layout() {
   const { user, setToken } = useAuth();
   const navigate = useNavigate();
+
+  const navItems = user?.role === 'student' ? STUDENT_NAV : TUTOR_NAV;
 
   const handleLogout = () => {
     setToken(null);
@@ -34,7 +43,7 @@ function Layout() {
         </div>
 
         <nav className="flex flex-1 flex-col gap-1 p-3">
-          {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
+          {navItems.map(({ to, label, icon: Icon, end }) => (
             <NavLink
               key={to}
               to={to}
