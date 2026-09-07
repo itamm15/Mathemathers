@@ -11,6 +11,19 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: { email } });
   }
 
+  async findProfile(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        role: true,
+      },
+    });
+  }
+
   async create(data: RegisterDto) {
     // TODO: Hash password before saving
     return this.prisma.user.create({
