@@ -20,16 +20,16 @@ type Row = { id: string; supervisor: { email: string } };
 const SECTIONS = [
   {
     key: 'pending' as const,
-    title: 'Pending invites',
-    description: 'Tutors waiting for you to accept or decline',
-    empty: 'No pending invites',
+    title: 'Oczekujące zaproszenia',
+    description: 'Korepetytorzy czekający na Twoją decyzję',
+    empty: 'Brak oczekujących zaproszeń',
     icon: Inbox,
   },
   {
     key: 'active' as const,
-    title: 'Active tutors',
-    description: 'Tutors you are linked with',
-    empty: 'No linked tutors yet',
+    title: 'Aktywni korepetytorzy',
+    description: 'Korepetytorzy, z którymi jesteś powiązany',
+    empty: 'Brak powiązanych korepetytorów',
     icon: GraduationCap,
   },
 ];
@@ -76,7 +76,7 @@ function Tutors() {
         pending: prev.pending.filter((row) => row.id !== id),
         active: [body, ...prev.active],
       }));
-      toast.success('Invite accepted');
+      toast.success('Zaproszenie przyjęte');
     } finally {
       setPendingActionId(null);
     }
@@ -101,7 +101,7 @@ function Tutors() {
         ...prev,
         pending: prev.pending.filter((row) => row.id !== id),
       }));
-      toast.success('Invite declined');
+      toast.success('Zaproszenie odrzucone');
     } finally {
       setPendingActionId(null);
     }
@@ -110,9 +110,9 @@ function Tutors() {
   return (
     <div className="mx-auto max-w-4xl space-y-8">
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight">Tutors</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Korepetytorzy</h1>
         <p className="text-muted-foreground">
-          Your linked tutors and pending invites
+          Twoi korepetytorzy i oczekujące zaproszenia
         </p>
       </div>
 
@@ -130,7 +130,7 @@ function Tutors() {
             </CardHeader>
             <CardContent>
               {loading && (
-                <p className="text-sm text-muted-foreground">Loading…</p>
+                <p className="text-sm text-muted-foreground">Ładowanie…</p>
               )}
               {!loading && items.length === 0 && (
                 <p className="text-sm text-muted-foreground">{empty}</p>
@@ -152,7 +152,7 @@ function Tutors() {
                             disabled={pendingActionId === item.id}
                             onClick={() => handleAccept(item.id)}
                           >
-                            Accept
+                            Akceptuj
                           </Button>
                           <Button
                             size="sm"
@@ -160,7 +160,7 @@ function Tutors() {
                             disabled={pendingActionId === item.id}
                             onClick={() => handleDecline(item.id)}
                           >
-                            Decline
+                            Odrzuć
                           </Button>
                         </div>
                       )}

@@ -22,18 +22,18 @@ type Row = { id: string; student: { email: string } };
 const SECTIONS = [
   {
     key: 'active' as const,
-    title: 'Linked students',
-    description: 'Students who accepted your invite',
-    empty: 'No linked students yet',
+    title: 'Powiązani uczniowie',
+    description: 'Uczniowie, którzy przyjęli zaproszenie',
+    empty: 'Brak powiązanych uczniów',
     icon: Users,
   },
   {
     key: 'pending' as const,
-    title: 'Pending invites',
-    description: 'Waiting for the student to accept',
-    empty: 'No pending invites',
+    title: 'Oczekujące zaproszenia',
+    description: 'Czekają na akceptację ucznia',
+    empty: 'Brak oczekujących zaproszeń',
     icon: Inbox,
-  }
+  },
 ];
 
 function Students() {
@@ -87,7 +87,7 @@ function Students() {
       const listBody = await listRes.json();
       if (listRes.ok) setRows(listBody);
 
-      toast.success('Invite sent');
+      toast.success('Zaproszenie wysłane');
       setEmail('');
     } finally {
       setSubmitting(false);
@@ -97,9 +97,9 @@ function Students() {
   return (
     <div className="mx-auto max-w-4xl space-y-8">
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight">Students</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Uczniowie</h1>
         <p className="text-muted-foreground">
-          Invite students and manage who is linked to you
+          Zapraszaj uczniów i zarządzaj powiązaniami
         </p>
       </div>
 
@@ -107,11 +107,11 @@ function Students() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <UserPlus className="size-5 text-primary" />
-            <CardTitle>Invite student</CardTitle>
+            <CardTitle>Zaproś ucznia</CardTitle>
           </div>
           <CardDescription>
-            Send an invite by email. They will need to accept it before showing
-            up below.
+            Wyślij zaproszenie na e-mail. Uczeń musi je zaakceptować, zanim
+            pojawi się poniżej.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -120,19 +120,19 @@ function Students() {
             className="flex flex-col gap-4 sm:flex-row sm:items-end"
           >
             <div className="flex-1 space-y-2">
-              <Label htmlFor="studentEmail">Student email</Label>
+              <Label htmlFor="studentEmail">E-mail ucznia</Label>
               <Input
                 id="studentEmail"
                 name="studentEmail"
                 type="email"
-                placeholder="student@example.com"
+                placeholder="anna.nowak@email.pl"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
             <Button type="submit" disabled={submitting}>
-              {submitting ? 'Sending…' : 'Send invite'}
+              {submitting ? 'Wysyłanie…' : 'Wyślij zaproszenie'}
             </Button>
           </form>
         </CardContent>
@@ -152,7 +152,7 @@ function Students() {
             </CardHeader>
             <CardContent>
               {loading && (
-                <p className="text-sm text-muted-foreground">Loading…</p>
+                <p className="text-sm text-muted-foreground">Ładowanie…</p>
               )}
               {!loading && items.length === 0 && (
                 <p className="text-sm text-muted-foreground">{empty}</p>
