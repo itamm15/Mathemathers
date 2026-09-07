@@ -52,4 +52,28 @@ export class SupervisionsService {
       },
     });
   }
+
+  async listStudents(supervisorId: string) {
+    const supervisor = await this.prisma.user.findUnique({ where: { id: supervisorId } });
+
+    if (!supervisor || supervisor.role !== 'tutor') {
+      throw new ForbiddenException({ errors: ['SUPERVISOR_NOT_TUTOR'] });
+    }
+
+    const supervisions = await this.prisma.studentSupervision.findMany({
+      where: {
+        supervisorId: supervisorId,
+      },
+      include: { student: true },
+    });
+
+    return {
+      pending: supervisions.filter(
+        (s) => s.status === StudentSupervisionStatus.PENDING,
+      ),
+      active: supervisions.filter(
+        (s) => s.status === StudentSupervisionStatus.ACTIVE,
+      ),
+    };
+  }
 }

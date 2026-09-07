@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import {
   inviteSupervisionSchema,
   type InviteSupervisionDto,
@@ -10,6 +10,12 @@ import { SupervisionsService } from './supervisions.service';
 @Controller('supervisions')
 export class SupervisionsController {
   constructor(private readonly supervisionsService: SupervisionsService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Get('students')
+  async listStudents(@Request() req) {
+    return this.supervisionsService.listStudents(req.user.userId);
+  }
 
   @UseGuards(JwtAuthGuard)
   @Post('invite')
