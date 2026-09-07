@@ -3,11 +3,17 @@ import {
   Controller,
   Get,
   NotFoundException,
+  Patch,
   Post,
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { registerSchema, type RegisterDto } from '@mathemathers/schemas';
+import {
+  registerSchema,
+  updateProfileSchema,
+  type RegisterDto,
+  type UpdateProfileDto,
+} from '@mathemathers/schemas';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -36,6 +42,21 @@ export class AuthController {
   @Get('profile')
   async profile(@Request() req) {
     const user = await this.usersService.findProfile(req.user.userId);
+
+    if (!user) {
+      throw new NotFoundException({ errors: ['USER_NOT_FOUND'] });
+    }
+
+    return user;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('profile')
+  async updateProfile(
+    @Request() req,
+    @Body(new ZodValidationPipe(updateProfileSchema)) body: UpdateProfileDto,
+  ) {
+    const user = await this.usersService.updateProfile(req.user.userId, body);
 
     if (!user) {
       throw new NotFoundException({ errors: ['USER_NOT_FOUND'] });
