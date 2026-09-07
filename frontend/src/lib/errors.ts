@@ -6,6 +6,8 @@ const ERROR_MESSAGES: Record<string, string> = {
   PASSWORD_TOO_SHORT: 'Hasło musi mieć co najmniej 8 znaków',
   PASSWORD_MISSING_LETTER: 'Hasło musi zawierać literę',
   PASSWORD_MISSING_NUMBER: 'Hasło musi zawierać cyfrę',
+  FIRST_NAME_REQUIRED: 'Podaj imię',
+  LAST_NAME_REQUIRED: 'Podaj nazwisko',
   SUPERVISOR_NOT_TUTOR: 'Tylko korepetytorzy mogą zapraszać uczniów',
   STUDENT_NOT_FOUND: 'Nie znaleziono ucznia z tym adresem e-mail',
   INVITE_PENDING: 'Zaproszenie już oczekuje na odpowiedź',

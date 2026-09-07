@@ -17,9 +17,9 @@ export class UsersService {
       data: {
         email: data.email,
         passwordHash: data.password, // Temporary - will hash later
-        firstName: '', // TODO: Add to form
-        lastName: '', // TODO: Add to form
-        role: data.role
+        firstName: data.firstName,
+        lastName: data.lastName,
+        role: data.role,
       },
     });
   }
