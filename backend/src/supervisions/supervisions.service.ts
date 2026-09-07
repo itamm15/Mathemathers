@@ -44,12 +44,24 @@ export class SupervisionsService {
       throw new BadRequestException({ errors: ['ALREADY_LINKED'] });
     }
 
+    if (
+      existing?.status === StudentSupervisionStatus.REVOKED ||
+      existing?.status === StudentSupervisionStatus.REJECTED
+    ) {
+      return this.prisma.studentSupervision.update({
+        where: { id: existing.id },
+        data: { status: StudentSupervisionStatus.PENDING },
+        include: { student: true },
+      });
+    }
+
     return this.prisma.studentSupervision.create({
       data: {
         supervisorId: supervisorId,
         studentId: student.id,
         status: StudentSupervisionStatus.PENDING,
       },
+      include: { student: true },
     });
   }
 
@@ -117,6 +129,28 @@ export class SupervisionsService {
     return this.prisma.studentSupervision.update({
       where: { id: supervisionId },
       data: { status: StudentSupervisionStatus.ACTIVE },
+      include: { supervisor: true },
+    });
+  }
+
+  async decline(studentId: string, supervisionId: string) {
+    const supervision = await this.prisma.studentSupervision.findUnique({ where: { id: supervisionId } });
+
+    if (!supervision) {
+      throw new NotFoundException({ errors: ['INVITE_NOT_FOUND'] });
+    }
+
+    if (supervision.studentId !== studentId) {
+      throw new ForbiddenException({ errors: ['FORBIDDEN'] });
+    }
+
+    if (supervision.status !== StudentSupervisionStatus.PENDING) {
+      throw new BadRequestException({ errors: ['INVITE_NOT_PENDING'] });
+    }
+
+    return this.prisma.studentSupervision.update({
+      where: { id: supervisionId },
+      data: { status: StudentSupervisionStatus.REJECTED },
       include: { supervisor: true },
     });
   }

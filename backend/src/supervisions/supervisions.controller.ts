@@ -34,4 +34,10 @@ export class SupervisionsController {
   async accept(@Request() req, @Param('id') id: string) {
     return this.supervisionsService.accept(req.user.userId, id);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/decline')
+  async decline(@Request() req, @Param('id') id: string) {
+    return this.supervisionsService.decline(req.user.userId, id);
+  }
 }

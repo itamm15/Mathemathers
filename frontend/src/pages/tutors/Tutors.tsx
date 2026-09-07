@@ -38,7 +38,7 @@ function Tutors() {
   const { token } = useAuth();
   const [rows, setRows] = useState({ pending: [] as Row[], active: [] as Row[] });
   const [loading, setLoading] = useState(true);
-  const [acceptingId, setAcceptingId] = useState<string | null>(null);
+  const [pendingActionId, setPendingActionId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!token) return;
@@ -60,7 +60,7 @@ function Tutors() {
   const handleAccept = async (id: string) => {
     if (!token) return;
 
-    setAcceptingId(id);
+    setPendingActionId(id);
     try {
       const res = await fetch(`${API_BASE_URL}/supervisions/${id}/accept`, {
         method: 'POST',
@@ -78,7 +78,32 @@ function Tutors() {
       }));
       toast.success('Invite accepted');
     } finally {
-      setAcceptingId(null);
+      setPendingActionId(null);
+    }
+  };
+
+  const handleDecline = async (id: string) => {
+    if (!token) return;
+
+    setPendingActionId(id);
+    try {
+      const res = await fetch(`${API_BASE_URL}/supervisions/${id}/decline`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const body = await res.json();
+      if (!res.ok) {
+        toast.error(getErrorMessage(body.errors || []));
+        return;
+      }
+
+      setRows((prev) => ({
+        ...prev,
+        pending: prev.pending.filter((row) => row.id !== id),
+      }));
+      toast.success('Invite declined');
+    } finally {
+      setPendingActionId(null);
     }
   };
 
@@ -121,13 +146,23 @@ function Tutors() {
                         {item.supervisor.email}
                       </p>
                       {key === 'pending' && (
-                        <Button
-                          size="sm"
-                          disabled={acceptingId === item.id}
-                          onClick={() => handleAccept(item.id)}
-                        >
-                          {acceptingId === item.id ? 'Accepting…' : 'Accept'}
-                        </Button>
+                        <div className="flex shrink-0 gap-2">
+                          <Button
+                            size="sm"
+                            disabled={pendingActionId === item.id}
+                            onClick={() => handleAccept(item.id)}
+                          >
+                            Accept
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={pendingActionId === item.id}
+                            onClick={() => handleDecline(item.id)}
+                          >
+                            Decline
+                          </Button>
+                        </div>
                       )}
                     </li>
                   ))}
