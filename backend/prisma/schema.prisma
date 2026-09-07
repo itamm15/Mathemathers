@@ -51,6 +51,5 @@ enum Role {
 enum StudentSupervisionStatus {
   PENDING
   ACTIVE
-  REVOKED
   REJECTED
 }

@@ -44,10 +44,7 @@ export class SupervisionsService {
       throw new BadRequestException({ errors: ['ALREADY_LINKED'] });
     }
 
-    if (
-      existing?.status === StudentSupervisionStatus.REVOKED ||
-      existing?.status === StudentSupervisionStatus.REJECTED
-    ) {
+    if (existing?.status === StudentSupervisionStatus.REJECTED) {
       return this.prisma.studentSupervision.update({
         where: { id: existing.id },
         data: { status: StudentSupervisionStatus.PENDING },
