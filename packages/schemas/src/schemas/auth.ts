@@ -11,6 +11,8 @@ export const registerSchema = z.object({
     .min(8, 'PASSWORD_TOO_SHORT')
     .regex(/[A-Za-z]/, 'PASSWORD_MISSING_LETTER')
     .regex(/[0-9]/, 'PASSWORD_MISSING_NUMBER'),
+  firstName: z.string().trim().min(1, 'FIRST_NAME_REQUIRED'),
+  lastName: z.string().trim().min(1, 'LAST_NAME_REQUIRED'),
   role: z.enum(USER_ROLES, { error: 'INVALID_ROLE' }),
 });
 
