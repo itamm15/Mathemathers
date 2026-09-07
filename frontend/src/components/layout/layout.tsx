@@ -12,16 +12,16 @@ import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 
 const TUTOR_NAV = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/students', label: 'Students', icon: Users, end: false },
-  { to: '/quizzes', label: 'Quizzes', icon: BookOpen, end: false },
-  { to: '/settings', label: 'Settings', icon: Settings, end: false },
+  { to: '/', label: 'Panel', icon: LayoutDashboard, end: true },
+  { to: '/students', label: 'Uczniowie', icon: Users, end: false },
+  { to: '/quizzes', label: 'Quizy', icon: BookOpen, end: false },
+  { to: '/settings', label: 'Ustawienia', icon: Settings, end: false },
 ];
 
 const STUDENT_NAV = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/tutors', label: 'Tutors', icon: GraduationCap, end: false },
-  { to: '/settings', label: 'Settings', icon: Settings, end: false },
+  { to: '/', label: 'Panel', icon: LayoutDashboard, end: true },
+  { to: '/tutors', label: 'Korepetytorzy', icon: GraduationCap, end: false },
+  { to: '/settings', label: 'Ustawienia', icon: Settings, end: false },
 ];
 
 function Layout() {
@@ -74,7 +74,7 @@ function Layout() {
             onClick={handleLogout}
           >
             <LogOut className="size-4" />
-            Log out
+            Wyloguj
           </Button>
         </div>
       </aside>

@@ -26,7 +26,7 @@ import { useAuth } from '@/context/AuthContext';
 function Register() {
   const { setToken } = useAuth();
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -40,7 +40,7 @@ function Register() {
       toast.error(getErrorMessage(result.errors));
       return;
     }
-    toast.success('Account created');
+    toast.success('Konto utworzone');
     setToken(result.access_token);
     navigate('/');
   };
@@ -58,22 +58,21 @@ function Register() {
         <CardHeader className="space-y-1 text-center">
           <div className="flex items-center justify-center gap-2">
             <UserPlus className="size-6 text-primary" />
-            <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
+            <CardTitle className="text-2xl font-bold">Rejestracja</CardTitle>
           </div>
           <CardDescription>
-            Enter your information to get started
+            Podaj dane, aby zacząć korzystać z aplikacji
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email Field */}
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">E-mail</Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="jan.kowalski@email.pl"
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -81,9 +80,8 @@ function Register() {
               />
             </div>
 
-            {/* Password Field */}
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Hasło</Label>
               <Input
                 id="password"
                 name="password"
@@ -96,9 +94,8 @@ function Register() {
               />
             </div>
 
-            {/* Role Selection */}
             <div className="space-y-2">
-              <Label htmlFor="role">Role</Label>
+              <Label htmlFor="role">Rola</Label>
               <Select
                 value={formData.role}
                 onValueChange={(value) =>
@@ -107,29 +104,27 @@ function Register() {
                 required
               >
                 <SelectTrigger id="role" className="w-full">
-                  <SelectValue placeholder="Select your role" />
+                  <SelectValue placeholder="Wybierz rolę" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="student">Student</SelectItem>
-                  <SelectItem value="parent">Parent</SelectItem>
-                  <SelectItem value="tutor">Tutor</SelectItem>
+                  <SelectItem value="student">Uczeń</SelectItem>
+                  <SelectItem value="parent">Rodzic</SelectItem>
+                  <SelectItem value="tutor">Korepetytor</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            {/* Submit Button */}
             <Button type="submit" className="w-full" size="lg">
-              Create Account
+              Utwórz konto
             </Button>
 
-            {/* Login Link */}
             <div className="text-center text-sm text-muted-foreground">
-              Already have an account?{' '}
+              Masz już konto?{' '}
               <Link
                 to="/login"
                 className="text-primary hover:underline font-medium"
               >
-                Sign in
+                Zaloguj się
               </Link>
             </div>
           </form>

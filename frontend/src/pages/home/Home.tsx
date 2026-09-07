@@ -9,40 +9,40 @@ import {
 import { useAuth } from '@/context/AuthContext';
 
 const TUTOR_SUMMARY = [
-  { label: 'Students', value: '3', hint: 'linked to you', icon: Users },
-  { label: 'Active quizzes', value: '5', hint: 'assigned this week', icon: BookOpen },
-  { label: 'Avg. score', value: '78%', hint: 'across all students', icon: TrendingUp },
+  { label: 'Uczniowie', value: '3', hint: 'powiązani z Tobą', icon: Users },
+  { label: 'Aktywne quizy', value: '5', hint: 'przypisane w tym tygodniu', icon: BookOpen },
+  { label: 'Śr. wynik', value: '78%', hint: 'u wszystkich uczniów', icon: TrendingUp },
 ];
 
 const TUTOR_NOTIFICATIONS = [
   {
     id: '1',
-    title: 'Anna Kowalska finished Algebra quiz',
-    time: '2 hours ago',
+    title: 'Anna Kowalska ukończyła quiz z algebry',
+    time: '2 godz. temu',
   },
   {
     id: '2',
-    title: 'Jakub Nowak started Geometry practice',
-    time: 'Yesterday',
+    title: 'Jakub Nowak zaczął ćwiczenia z geometrii',
+    time: 'Wczoraj',
   },
   {
     id: '3',
-    title: 'New student invite accepted — Maja Wiśniewska',
-    time: '3 days ago',
+    title: 'Nowe zaproszenie przyjęte — Maja Wiśniewska',
+    time: '3 dni temu',
   },
 ];
 
 const STUDENT_SUMMARY = [
-  { label: 'Tutors', value: '—', hint: 'linked to you', icon: GraduationCap },
-  { label: 'Pending invites', value: '—', hint: 'waiting for your response', icon: Inbox },
-  { label: 'Quizzes', value: '—', hint: 'assigned to you', icon: BookOpen },
+  { label: 'Korepetytorzy', value: '—', hint: 'powiązani z Tobą', icon: GraduationCap },
+  { label: 'Oczekujące zaproszenia', value: '—', hint: 'czekają na Twoją odpowiedź', icon: Inbox },
+  { label: 'Quizy', value: '—', hint: 'przypisane do Ciebie', icon: BookOpen },
 ];
 
 const STUDENT_NOTIFICATIONS = [
   {
     id: '1',
-    title: 'Check Tutors for pending invites from your teachers',
-    time: 'Just now',
+    title: 'Sprawdź Korepetytorów — masz oczekujące zaproszenia od nauczycieli',
+    time: 'Przed chwilą',
   },
 ];
 
@@ -50,9 +50,9 @@ function TutorDashboard({ email }: { email?: string }) {
   return (
     <>
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Panel</h1>
         <p className="text-muted-foreground">
-          Overview of your tutoring activity
+          Przegląd Twojej aktywności korepetytorskiej
           {email ? ` · ${email}` : ''}
         </p>
       </div>
@@ -76,9 +76,9 @@ function TutorDashboard({ email }: { email?: string }) {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Bell className="size-5 text-primary" />
-            <CardTitle>Notifications</CardTitle>
+            <CardTitle>Powiadomienia</CardTitle>
           </div>
-          <CardDescription>Recent activity from your students</CardDescription>
+          <CardDescription>Ostatnia aktywność Twoich uczniów</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <ul className="divide-y">
@@ -104,9 +104,9 @@ function StudentDashboard({ email }: { email?: string }) {
   return (
     <>
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Panel</h1>
         <p className="text-muted-foreground">
-          Overview of your learning activity
+          Przegląd Twojej nauki
           {email ? ` · ${email}` : ''}
         </p>
       </div>
@@ -130,9 +130,11 @@ function StudentDashboard({ email }: { email?: string }) {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Bell className="size-5 text-primary" />
-            <CardTitle>Notifications</CardTitle>
+            <CardTitle>Powiadomienia</CardTitle>
           </div>
-          <CardDescription>Updates about your tutors and quizzes</CardDescription>
+          <CardDescription>
+            Aktualizacje o korepetytorach i quizach
+          </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <ul className="divide-y">
