@@ -14,6 +14,9 @@ const ERROR_MESSAGES: Record<string, string> = {
   ALREADY_LINKED: 'Ten uczeń jest już z Tobą powiązany',
   INVITE_NOT_FOUND: 'Nie znaleziono zaproszenia',
   INVITE_NOT_PENDING: 'To zaproszenie nie jest już oczekujące',
+  FIRST_NAME_REQUIRED: 'Podaj imię',
+  LAST_NAME_REQUIRED: 'Podaj nazwisko',
+  USER_NOT_FOUND: 'Nie znaleziono użytkownika',
   FORBIDDEN: 'Nie masz uprawnień do tej akcji',
 };
 
