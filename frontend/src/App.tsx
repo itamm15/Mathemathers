@@ -6,6 +6,7 @@ import GuestRoute from './components/GuestRoute';
 import Home from './pages/home';
 import Students from './pages/students';
 import Tutors from './pages/tutors';
+import Settings from './pages/settings';
 import Login from './pages/login';
 import Register from './pages/register';
 
@@ -15,6 +16,7 @@ function App() {
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="settings" element={<Settings />} />
 
           <Route element={<RoleRoute roles={['tutor']} />}>
             <Route path="students" element={<Students />} />
