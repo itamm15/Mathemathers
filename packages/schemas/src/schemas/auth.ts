@@ -17,3 +17,10 @@ export const registerSchema = z.object({
 });
 
 export type RegisterDto = z.infer<typeof registerSchema>;
+
+export const updateProfileSchema = z.object({
+  firstName: z.string().trim().min(1, 'FIRST_NAME_REQUIRED'),
+  lastName: z.string().trim().min(1, 'LAST_NAME_REQUIRED'),
+});
+
+export type UpdateProfileDto = z.infer<typeof updateProfileSchema>;

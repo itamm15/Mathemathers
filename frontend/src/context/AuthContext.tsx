@@ -40,11 +40,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (cancelled) return;
 
         const profileUser: User = {
-          id: data.userId,
+          id: data.id,
           email: data.email,
-          firstName: '',
-          lastName: '',
-          role: data.role
+          firstName: data.firstName,
+          lastName: data.lastName,
+          role: data.role,
         };
 
         setUserState(profileUser);
